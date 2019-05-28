@@ -9,8 +9,8 @@ RUN apt-get update && \
         libpq-dev \
         libzip-dev \
         git \
-        curl && \
-    docker-php-ext-install \
+        curl \
+    && docker-php-ext-install \
         mbstring \
         bcmath \
         intl \
@@ -18,11 +18,18 @@ RUN apt-get update && \
         zip \
         pdo \
         pdo_pgsql \
-        pdo_mysql && \
-    pecl install apcu && \
-    docker-php-ext-enable apcu && \
-    echo "date.timezone = Europe/Paris" >> /usr/local/etc/php/conf.d/symfony.ini && \
-    echo "short_open_tag = Off" >> /usr/local/etc/php/conf.d/symfony.ini
+        pdo_mysql \
+    && pecl install apcu \
+    && docker-php-ext-enable apcu \
+    && echo "date.timezone = Europe/Paris" >> /usr/local/etc/php/conf.d/symfony.ini \
+    && echo "short_open_tag = Off" >> /usr/local/etc/php/conf.d/symfony.ini
+
+RUN apt-get install -y \
+        libc-client-dev libkrb5-dev && \
+    rm -r /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
+    docker-php-ext-install -j$(nproc) imap
 
 # SSH2
 #RUN apt-get install -y \
