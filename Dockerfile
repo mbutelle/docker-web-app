@@ -1,7 +1,7 @@
 FROM php:7.3-fpm
 
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get update \
+    && apt-get install -y \
         apt-utils \
         libicu-dev \
         libjpeg-dev \
@@ -10,6 +10,8 @@ RUN apt-get update && \
         libzip-dev \
         git \
         curl \
+        libc-client-dev \
+        libkrb5-dev \
     && docker-php-ext-install \
         mbstring \
         bcmath \
@@ -24,12 +26,7 @@ RUN apt-get update && \
     && echo "date.timezone = Europe/Paris" >> /usr/local/etc/php/conf.d/symfony.ini \
     && echo "short_open_tag = Off" >> /usr/local/etc/php/conf.d/symfony.ini
 
-RUN apt-get install -y \
-        libc-client-dev libkrb5-dev && \
-    rm -r /var/lib/apt/lists/*
-
-RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
-    docker-php-ext-install -j$(nproc) imap
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
 
 # SSH2
 #RUN apt-get install -y \
@@ -49,8 +46,10 @@ RUN curl -sL 'https://deb.nodesource.com/setup_6.x' | bash /dev/stdin
 RUN curl -sS 'https://dl.yarnpkg.com/debian/pubkey.gpg' | apt-key add -
 RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-RUN apt-get -y update && apt-get install -y nodejs yarn
+RUN apt-get -y update && curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y nodejs yarn
 
+# Download and install wkhtmltopdf
+RUN apt-get update && apt-get install -y wkhtmltopdf xvfb
 
 # CLEAN
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
