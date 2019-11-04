@@ -54,8 +54,8 @@ RUN apt-get update && apt-get install -y wkhtmltopdf xvfb
 # CLEAN
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN npm install gulp -g
-RUN npm install bower -g
+RUN yarn global add gulp -g
+RUN yarn global add bower -g
 
 # Composer
 COPY install-composer /usr/local/bin/install-composer
