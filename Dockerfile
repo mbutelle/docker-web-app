@@ -12,6 +12,7 @@ RUN apt-get update \
         curl \
         libc-client-dev \
         libkrb5-dev \
+        libmagickwand-dev --no-install-recommends \
     && docker-php-ext-install \
         mbstring \
         bcmath \
@@ -21,8 +22,11 @@ RUN apt-get update \
         pdo \
         pdo_pgsql \
         pdo_mysql \
+        gd \
     && pecl install apcu \
     && docker-php-ext-enable apcu \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     && echo "date.timezone = Europe/Paris" >> /usr/local/etc/php/conf.d/symfony.ini \
     && echo "short_open_tag = Off" >> /usr/local/etc/php/conf.d/symfony.ini
 
