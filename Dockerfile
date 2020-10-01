@@ -8,11 +8,13 @@ RUN apt-get update \
         libpng-dev \
         libpq-dev \
         libzip-dev \
+        libssh-dev \
         git \
         curl \
         libc-client-dev \
         libkrb5-dev \
         libmagickwand-dev --no-install-recommends \
+        ssh \
     && docker-php-ext-install \
         mbstring \
         bcmath \
@@ -32,15 +34,6 @@ RUN apt-get update \
 
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
 
-# SSH2
-#RUN apt-get install -y \
-#        wget \
-#        unzip \
-#        libssh2-1-dev \
-#        libssh2-1 && \
-#        pecl install ssh2-1.1.0 && \
-#    echo "extension=ssh2.so" >> /usr/local/etc/php/conf.d/symfony.ini
-
 # install mongodb ext
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
@@ -50,7 +43,7 @@ RUN curl -sL 'https://deb.nodesource.com/setup_6.x' | bash /dev/stdin
 RUN curl -sS 'https://dl.yarnpkg.com/debian/pubkey.gpg' | apt-key add -
 RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-RUN apt-get -y update && curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -y nodejs yarn
+RUN apt-get -y update && curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt-get install -y nodejs yarn
 
 # Download and install wkhtmltopdf
 RUN apt-get update && apt-get install -y wkhtmltopdf xvfb
