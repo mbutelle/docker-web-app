@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.4-fpm
 
 RUN apt-get update \
     && apt-get install -y \
@@ -9,6 +9,7 @@ RUN apt-get update \
         libpq-dev \
         libzip-dev \
         libssh-dev \
+        libonig-dev \
         git \
         curl \
         libc-client-dev \
@@ -16,8 +17,8 @@ RUN apt-get update \
         libmagickwand-dev --no-install-recommends \
         ssh \
     && docker-php-ext-install \
-        mbstring \
         bcmath \
+        sockets \
         intl \
         opcache \
         zip \
